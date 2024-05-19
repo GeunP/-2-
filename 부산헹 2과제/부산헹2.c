@@ -39,9 +39,7 @@ void intro(void) {
 	printf("   좀비를 피해서 도망가시오.");
 	printf("\n\n==============================\n\n");
 
-	PM = train_length - 2;	//초기화
-	PZ = train_length - 3;	//초기화
-	PC = train_length - 6;	//초기화
+
 }
 
 //아웃트로
@@ -76,8 +74,12 @@ void percent(void) {
 	}
 }
 
-//열차상태
+//열차 초기 상태
 void displayTrain(void) {
+	PM = train_length - 2;	//초기화
+	PZ = train_length - 3;	//초기화
+	PC = train_length - 6;	//초기화
+
 	for (int i = 0; i < 3; i++) {
 		for (int j = 0; j < train_length; j++) {
 			if (i == 0 || i == 2) printf("#");
@@ -93,6 +95,25 @@ void displayTrain(void) {
 	}
 	printf("\n");
 }
+
+//열차 상태
+void basicTrain(void) {
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < train_length; j++) {
+			if (i == 0 || i == 2) printf("#");
+			else {
+				if (j == 0 || j == train_length - 1) printf("#");
+				else if (j == PC) printf("C");
+				else if (j == PZ) printf("Z");
+				else if (j == PM) printf("M");
+				else printf(" ");
+			}
+		}
+		printf("\n");
+	}
+	printf("\n");
+}
+
 
 //시민, 좀비 이동
 void movement(void) {
@@ -110,7 +131,7 @@ void movement(void) {
 		}
 	}
 
-	displayTrain();
+	basicTrain();
 
 }
 
@@ -146,15 +167,19 @@ int main(void) {
 	train();
 	percent();
 	displayTrain();
+	turn = 1;
+	Citizen = 0;
+	Zombie = 0;
 	while (1) {
+		Citizen = PC;
+		Zombie = PZ;
 		movement();
 		updatePosition();
-		if (PC == PZ || PC == 1) {
+		if (PC == PZ - 1 || PC == 1) {
 			outro();
 			break;
 		}
 		turn++;
 		Sleep(4000);
 	}
-	return 0;
 }
