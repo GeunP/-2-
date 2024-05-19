@@ -1,4 +1,6 @@
 #include<stdio.h>
+#include<time.h>
+#include<windows.h>
 
 #define LEN_MIN 15     //기차 길이
 #define LEN_MAX 50
@@ -23,21 +25,23 @@
 #define ACTION_PROVOKE 1
 #define ACTION_PULL 2
 
-//랜덤변수
-srand((unsigned)time(NULL));
 
 //변수 선언
-int train_length, percentile_probability, PM, PC, PZ, turn;
+int train_length, percentile_probability, PM, PC, PZ;
+int turn = 1;
+int Citizen, Zombie;
+int Random_NumC, Random_NumZ;	
 
-//함수 선언
-int updatePosition(int, int, int);
-int displayMove(int, int, char);
 
 //인트로
 void intro(void) {
 	printf("\n==========GAME START==========\n\n");
 	printf("   좀비를 피해서 도망가시오.");
 	printf("\n\n==============================\n\n");
+
+	PM = train_length - 2;	//초기화
+	PZ = train_length - 3;	//초기화
+	PC = train_length - 6;	//초기화
 }
 
 //아웃트로
@@ -90,4 +94,67 @@ void displayTrain(void) {
 	printf("\n");
 }
 
-//
+//시민, 좀비 이동
+void movement(void) {
+	//시민 이동
+	Random_NumC = rand() % 100 + 1;
+	if (Random_NumC <= (100 - percentile_probability) && PC > 1) {
+		PC--;
+	}
+
+	//좀비 이동
+	if (turn % 2 == 1) {
+		Random_NumZ = rand() % 100 + 1;
+		if (Random_NumZ <= percentile_probability && PZ > 1) {
+			PZ--;
+		}
+	}
+
+	displayTrain();
+
+}
+
+//시민, 좀비 이동 출력
+void updatePosition(void) {
+	//시민 이동 출력
+	if (Citizen == PC) {
+		printf("\ncitizen : stay %d\n", PC);
+	}
+	else {
+		printf("\ncitizen : %d -> %d\n", Citizen, PC);
+	}
+
+	//좀비 이동 출력
+	if (turn % 2 == 1) {
+		if (Zombie == PZ) {
+			printf("zombie : stay %d\n\n", PZ);
+		}
+		else {
+			printf("zombie : %d -> %d\n\n", Zombie, PZ);
+		}
+	}
+	else {
+		printf("zombie : stay %d(cannot move)\n\n", PZ);
+	}
+
+}
+
+
+int main(void) {
+	srand((unsigned int)time(NULL));
+	intro();
+	train();
+	percent();
+	displayTrain();
+	while (1) {
+		movement();
+		updatePosition();
+		if (PC == PZ || PC == 1) {
+			outro();
+			break;
+		}
+		turn++;
+		Sleep(4000);
+	}
+	return 0;
+}
