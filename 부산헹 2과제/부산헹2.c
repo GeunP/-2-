@@ -32,7 +32,7 @@ int turn = 1;
 int Citizen, Zombie, Madongseok;
 int Random_NumC, Random_NumZ;
 int move, rest;
-int Citizen_Aggro, Madongseok_Aggro;
+int Citizen_Aggro = 1, Madongseok_Aggro = 1;
 int action_Madongseok;
 
 
@@ -138,19 +138,23 @@ void basicTrain(void) {
 	printf("\n");
 }
 
-
+//시민 이동
 void C_movement(void) {
-	//시민 이동
 	Random_NumC = rand() % 100 + 1;
 	if (Random_NumC <= (100 - percentile_probability) && PC > 1) {
 		PC--;
 		if (Citizen_Aggro < AGGRO_MAX) {
-			Citizen_Aggro++;
+			Citizen_Aggro += 1;
+		}
+	}
+	else {
+		if (Citizen_Aggro > AGGRO_MIN) {
+			Citizen_Aggro -= 1;
 		}
 	}
 }
+//좀비 이동
 void Z_movement(void) {
-		//좀비 이동
 	if (turn % 2 == 1) {
 		Random_NumZ = rand() % 100 + 1;
 		if (Random_NumZ <= percentile_probability && PZ > 1) {
@@ -172,18 +176,18 @@ void movement(void) {
 	M_movement();
 	basicTrain();
 }
-
-//시민, 좀비 이동 출력
-void updatePosition(void) {
-	//시민 이동 출력
+//시민 이동 출력
+void C_updatePosition(void) {
 	if (Citizen == PC) {
 		printf("\ncitizen : stay %d (aggro : %d)\n", PC, Citizen_Aggro);
 	}
 	else {
 		printf("\ncitizen : %d -> %d (aggro : %d)\n", Citizen, PC, Citizen_Aggro);
 	}
+}
 
-	//좀비 이동 출력
+//좀비 이동 출력
+void Z_updatePostion(void){
 	if (turn % 2 == 1) {
 		if (Zombie == PZ) {
 			printf("zombie : stay %d\n\n", PZ);
@@ -237,6 +241,5 @@ int main(void) {
 			break;
 		}
 		turn++;
-		Sleep(4000);
 	}
 }
