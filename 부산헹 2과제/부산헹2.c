@@ -27,10 +27,14 @@
 
 
 //변수 선언
-int train_length, percentile_probability, PM, PC, PZ;
+int train_length, percentile_probability, madongseok_stamina, PM, PC, PZ;
 int turn = 1;
-int Citizen, Zombie;
-int Random_NumC, Random_NumZ;	
+int Citizen, Zombie, Madongseok;
+int Random_NumC, Random_NumZ;
+int move, rest;
+int Citizen_Aggro, Madongseok_Aggro;
+int action_Madongseok;
+
 
 
 //인트로
@@ -59,18 +63,38 @@ void train(void) {
 	printf("train length (%d ~ %d) >> ", LEN_MIN, LEN_MAX);
 	scanf_s("%d", &train_length);
 	while (train_length < LEN_MIN || train_length > LEN_MAX) {
-		printf("INVALID INPUT");
+		printf("train length (%d ~ %d) >> ", LEN_MIN, LEN_MAX);
 		scanf_s("%d", &train_length);
 	}
 }
 
 //확률
 void percent(void) {
-	printf("percentile probability (%d ~ %d) >> ", PROB_MIN, PROB_MAX);
+	printf("percentile probability 'p'(%d ~ %d) >> ", PROB_MIN, PROB_MAX);
 	scanf_s("%d", &percentile_probability);
 	while (percentile_probability < PROB_MIN || percentile_probability > PROB_MAX) {
-		printf("INVALID INPUT");
+		printf("percentile probability 'p'(%d ~ %d) >> ", PROB_MIN, PROB_MAX);
 		scanf_s("%d", &percentile_probability);
+	}
+}
+
+//마동석 체력
+void Stamina(void) {
+	printf("madongseok stamina(%d ~ %d) >> ", STM_MIN, STM_MAX);
+	scanf_s("%d", &madongseok_stamina);
+	while (madongseok_stamina < STM_MIN || madongseok_stamina > STM_MAX) {
+		printf("madongseok stamina (%d ~ %d) >> ", STM_MIN, STM_MAX);
+		scanf_s("%d", &madongseok_stamina);
+	}
+}
+
+//마동석 조건
+void Condition(void) {
+	printf("madongseok move (0:stay, 1:left) >> ");
+	scanf_s("%d", &move);
+	while (move != 1 && move != 0) {
+		printf("madongseok move (0:stay, 1:left) >> ");
+		scanf_s("%d", &move);
 	}
 }
 
@@ -115,34 +139,48 @@ void basicTrain(void) {
 }
 
 
-//시민, 좀비 이동
-void movement(void) {
+void C_movement(void) {
 	//시민 이동
 	Random_NumC = rand() % 100 + 1;
 	if (Random_NumC <= (100 - percentile_probability) && PC > 1) {
 		PC--;
+		if (Citizen_Aggro < AGGRO_MAX) {
+			Citizen_Aggro++;
+		}
 	}
-
-	//좀비 이동
+}
+void Z_movement(void) {
+		//좀비 이동
 	if (turn % 2 == 1) {
 		Random_NumZ = rand() % 100 + 1;
 		if (Random_NumZ <= percentile_probability && PZ > 1) {
 			PZ--;
 		}
 	}
-
+}
+void M_movement(void) {
+	//마동석 이동
+	if (move == 1) {
+		PM--;
+	}
+}
+	
+//이동
+void movement(void) {
+	C_movement();
+	Z_movement();
+	M_movement();
 	basicTrain();
-
 }
 
 //시민, 좀비 이동 출력
 void updatePosition(void) {
 	//시민 이동 출력
 	if (Citizen == PC) {
-		printf("\ncitizen : stay %d\n", PC);
+		printf("\ncitizen : stay %d (aggro : %d)\n", PC, Citizen_Aggro);
 	}
 	else {
-		printf("\ncitizen : %d -> %d\n", Citizen, PC);
+		printf("\ncitizen : %d -> %d (aggro : %d)\n", Citizen, PC, Citizen_Aggro);
 	}
 
 	//좀비 이동 출력
@@ -157,26 +195,45 @@ void updatePosition(void) {
 	else {
 		printf("zombie : stay %d(cannot move)\n\n", PZ);
 	}
+}
 
+//마동석 대기
+void Rest(void) {
+	printf("madongseok action (%d.rest, %d.provoke) >> ", ACTION_REST, ACTION_PROVOKE);
+	scanf_s("%d", &rest);
+
+	if (rest == ACTION_REST) {
+		printf("madongseok rest...\n");
+		printf("madongseok: %d (aggro : %d, stamina : %d)\n", PM, AGGRO_MIN, madongseok_stamina);
+	}
 }
 
 
 int main(void) {
 	srand((unsigned int)time(NULL));
-	intro();
-	train();
-	percent();
-	displayTrain();
+	intro(); // 시작
+	train(); // 열차 길이
+	Stamina(); // 마동석 체력
+	percent(); // 확률
+	displayTrain(); //처음 열차
 	turn = 1;
 	Citizen = 0;
 	Zombie = 0;
+	Madongseok = 0;
 	while (1) {
 		Citizen = PC;
 		Zombie = PZ;
-		movement();
-		updatePosition();
+		Madongseok = PM;
+		movement(); // 시민, 좀비 이동
+		updatePosition(); // 시민, 좀비 이동 출력
+		Condition(); // 마동석 조건
+		movement(); // 열차 다시 출력
+		printf("madongseok : stay %d (aggro : %d, stamina : %d)\n", PM, AGGRO_MIN, madongseok_stamina);
+		printf("Citizen does nothing.\n");
+		printf("zombie attaked nobody.\n");
+		Rest(); // 마동석 대기
 		if (PC == PZ - 1 || PC == 1) {
-			outro();
+			outro(); // 끝
 			break;
 		}
 		turn++;
