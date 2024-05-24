@@ -66,7 +66,7 @@ void train(void) {
 }
 
 //확률 
-void percent(void) {
+void Percent(void) {
 	printf("percentile probability 'p'(%d ~ %d) >> ", PROB_MIN, PROB_MAX);
 	scanf_s("%d", &percentile_probability);
 	while (percentile_probability < PROB_MIN || percentile_probability > PROB_MAX) {
@@ -205,7 +205,8 @@ void displayPosition_Z(void) {
 }
 
 //마동석 이동
-void M_movement(void) {
+void M_movement_main(void) {
+	move = -1;
 	if ((PM - PZ) == 1) {
 		while (move != 0) {
 			printf("\nmadongseok move (%d : stay)", MOVE_STAY);
@@ -218,11 +219,11 @@ void M_movement(void) {
 			scanf_s("%d", &move);
 		}
 	}
-	M_movement1();
-	M_movement2();
+	M_Movement();
+	M_moveMent();
 }
 //마동석 이동 1
-void M_movement1(void) {
+void M_Movement(void) {
 	if (move == MOVE_STAY) {
 		if (Madongseok_Aggro > AGGRO_MIN) {
 			Madongseok_Aggro--;
@@ -232,7 +233,7 @@ void M_movement1(void) {
 	}
 }
 //마동석 이동 2
-void M_movement2(void) {
+void M_moveMent(void) {
 	if (move == MOVE_LEFT) {
 		PM--;
 		if (Madongseok_Aggro < AGGRO_MAX) {
@@ -304,7 +305,7 @@ void displayAction_Z(void) {
 		printf("\nzombie attack nobody.\n");
 		break;
 	case ATK_CITIZEN:
-		printf("GAME OVER! citizen dead.....\m");
+		printf("GAME OVER! citizen dead.....\n");
 		break;
 	case ATK_DONGSEOK:
 		Madongseok_Stamina++;
@@ -319,7 +320,7 @@ void displayAction_Z(void) {
 }
 
 //마동석 행동
-void M_action(void) {
+void M_action_main(void) {
 	if ((PM - PZ) != 1) {
 		while (Madongseok_Action != 0 && Madongseok_Action != 1) {
 			printf("\nmadongseok action (%d : rest, %d : provoke) >> ", ACTION_REST, ACTION_PROVOKE);
@@ -332,11 +333,12 @@ void M_action(void) {
 		}
 	}
 
-	M_action1();
+	M_Action();
 }
 
 //마동석 행동 1
-void M_action1(void) {
+void M_Action(void) {
+	Madongseok_Action = -1;
 	if (Madongseok_Action == ACTION_REST) {
 		Madongseok_Aggro--;
 		Madongseok_Stamina++;
@@ -367,7 +369,7 @@ void displayAction_M(void) {
 		}
 		break;
 	case ACTION_PROVOKE:
-		printf("\nmadongseok : %d (aggro : %d -> %d, stamina : %d -> %d)\n", PM, Madongseok_Aggro, AGGRO_MAX, Madongseok_Stamina);
+		printf("\nmadongseok : %d (aggro : %d -> %d, stamina : %d)\n", PM, Madongseok_Aggro, AGGRO_MAX, Madongseok_Stamina);
 		Madongseok_Aggro = AGGRO_MAX;
 		break;
 	case ACTION_PULL:
@@ -404,9 +406,9 @@ int main(void) {
 
 
 	intro();                
-	inputTrain();           
-	inputStamina();         
-	inputPercent();         
+	Train();           
+	Stamina();         
+	Percent();         
 
 	PM = train_length - 2;  
 	PZ = train_length - 3;  
@@ -424,7 +426,7 @@ int main(void) {
 		displayTrain();           
 		displayPosition_Z();    
 		printf("\n");
-		M_movement();           
+		M_movement_main();           
 		displayTrain();         
 
 		displayPosition_M();    
@@ -434,11 +436,10 @@ int main(void) {
 		displayAction_C();  
 		if (GameOver == 1) break;
 		displayAction_Z();  
-		M_action();         
+		M_action_main();         
 		displayAction_M();    
 		
 		Turnphase++;
 		if (GameOver == 1) break;
 	}
-
 }
