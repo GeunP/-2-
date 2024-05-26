@@ -41,6 +41,9 @@ int GameOver;                               // Game Over Fag, '0':ing, '1':end
 void M_movement1(void);
 void M_movement2(void);
 void M_action1(void);
+void displayAction_M1(void);
+void displayAction_M2(void);
+void displayAction_M3(void);
 
 //인트로
 void intro(void) {
@@ -52,10 +55,10 @@ void intro(void) {
 //아웃트로
 void outro(void) {
 	if (PC == PZ - 1) {
-		printf("GAME OVER!\nTHE citizen has been caught by the zombie.\n");
+		printf("\nGAME OVER!\nTHE citizen has been caught by the zombie.\n");
 	}
     if (PC == 1) {
-		printf("YOU WIN!\nTHE citizen has escaped to the next train.\n");
+		printf("\nYOU WIN!\nTHE citizen has escaped to the next train.\n");
 	}
 }
 
@@ -358,51 +361,96 @@ void M_action(void) {
 void M_action1(void) {
 	Madongseok_Action = -1;
 	if (Madongseok_Action == ACTION_REST) {
-		Madongseok_Aggro--;
-		Madongseok_Stamina++;
-		Action_M = ACTION_REST;
+		if (Madongseok_Aggro > AGGRO_MIN && Madongseok_Stamina < STM_MAX) {
+			Madongseok_Aggro--;
+			Madongseok_Stamina++;
+			Action_M = 1;
+		}
+		else if (Madongseok_Stamina > AGGRO_MIN && Madongseok_Stamina == STM_MAX) {
+			Madongseok_Aggro--;
+			Action_M = 2;
+		}
+		else if (Madongseok_Stamina == AGGRO_MIN && Madongseok_Stamina < STM_MAX) {
+			Madongseok_Stamina++;
+			Action_M = 3;
+		}
+		else {
+			Action_M = 4;
+		}
 	}
 	else if (Madongseok_Action == ACTION_PROVOKE) {
-		Action_M = ACTION_PROVOKE;
+		Madongseok_Aggro = AGGRO_MAX;
+		Action_M = 5;
 	}
 	else if (Madongseok_Action == ACTION_PULL) {
-		Madongseok_Aggro += 2;
-		if (Madongseok_Action > STM_MIN) {
-			Madongseok_Stamina--;
-		}
-	Action_M = ACTION_PULL;
+		Madongseok_Aggro = Madongseok_Aggro + 2;
+		Madongseok_Stamina--;
+		Action_M;
 	}
 }
 
 //마동석 행동 swtich문
 void displayAction_M(void) {
+	displayAction_M1();
+	displayAction_M2();
+}
+
+//마동석 행동 switch문 1
+void displayAction_M1(void) {
 	switch (Action_M) {
-	case ACTION_REST:
-		printf("\nmadongseok rest.....\n");
-		if (Madongseok_Stamina == STM_MIN) {
-			printf("\nmadongseok : %d (aggro : %d -> %d, stamina : %d)\n", PM, Madongseok_Aggro + 1, Madongseok_Aggro, Madongseok_Stamina);
-		}
-		else {
-			printf("\nmadongseok : %d (aggro : %d -> %d, stamina : %d -> %d)\n", PM, Madongseok_Aggro + 1, Madongseok_Aggro, Madongseok_Stamina - 1, Madongseok_Stamina);
-		}
+	case 1:
+		printf("\nmadongseok rest.....");
+		printf("\nmadongseok : %d (aggro : %d -> %d, stamina : %d -> %d)\n", PM, Madongseok_Aggro + 1, Madongseok_Aggro,Madongseok_Stamina - 1, Madongseok_Stamina);
 		break;
-	case ACTION_PROVOKE:
-		printf("\nmadongseok : %d (aggro : %d -> %d, stamina : %d)\n", PM, Madongseok_Aggro, AGGRO_MAX, Madongseok_Stamina);
-		Madongseok_Aggro = AGGRO_MAX;
+	case 2:
+		printf("\nmadongseok rest.....");
+		printf("\nmadongseok : %d (aggro : %d -> %d, stamina : %d)\n", PM, Madongseok_Aggro + 1, Madongseok_Aggro, Madongseok_Stamina);
 		break;
-	case ACTION_PULL:
+	default:
+		break;
+	}
+}
+
+//마동석 행동 switch문 2
+void displayAction_M2(void) {
+	switch (Action_M) {
+	case 3:
+		printf("\nmaodngseok rest.....");
+		printf("\nmadongseok : %d (aggro : %d, stamina : %d -> %d)\n", PM, Madongseok_Aggro, Madongseok_Stamina - 1, Madongseok_Stamina);
+		break;
+	case 4:
+		printf("\nmadongseok rest.....");
+		printf("\nmadongseok : %d (aggro : %d, stamina : %d)\n", PM, Madongseok_Aggro, Madongseok_Stamina);
+		break;
+	case 5:
+		printf("\nmadongseok : %d (aggro : %d, stamina : %d)\n", PM, Madongseok_Aggro, Madongseok_Stamina);
+	default:
+		break;
+	}
+}
+
+//마동석 행동 switch문 3
+void displayAction_M3(void) {
+	switch (Action_M) {
+	case 6:
 		Random_NumC = rand() % 100 + 1;
 		if (Random_NumC <= (100 - percentile_probability)) {
-			Madongseok_Hold = 1;
+			Madongseok_Hold = 1; // 마동석 좀비 '붙들기' 성공
 			printf("\nmadongseok pulled zombie... Next turn, it can't move\n");
 		}
 		else {
-			Madongseok_Hold = 0; 
+			Madongseok_Hold = 0; // 마동석 좀비 '붙들기' 실패
 			printf("\nmadongseok failed to pull zombie\n");
 		}
-		printf("\nmadongseok: %d (aggro : %d -> %d, stamina: %d -> %d)\n", PM, Madongseok_Aggro - 2, Madongseok_Aggro, Madongseok_Stamina + 1, Madongseok_Stamina);
+		if ((Madongseok_Aggro <= AGGRO_MAX) && (Madongseok_Stamina >= STM_MIN)) {
+			printf("\nmadongseok: %d (aggro : %d -> %d, stamina: %d -> %d)\n", PM, Madongseok_Aggro - 2, Madongseok_Aggro, Madongseok_Stamina + 1, Madongseok_Stamina);
+		}
+		else {
+			printf("\nmadongseok: %d (aggro : %d, stamina: %d)\n", PM, Madongseok_Aggro, Madongseok_Stamina);
+		}
 		break;
-
+	defualt:
+		break;
 	}
 }
 
