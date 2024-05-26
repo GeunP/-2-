@@ -141,10 +141,10 @@ void C_movement(void) {
 void displayPosition_C(void) {
 	switch (Position_C) {
 	case 1:
-		printf("\nCitizen : %d -> %d (aggro : %d -> %d)", Citizen, PC, Citizen_Aggro - 1, Citizen_Aggro);
+		printf("\nCitizen : %d -> %d (aggro : %d -> %d)", PC + 1, PC, Citizen_Aggro - 1, Citizen_Aggro);
 		break;
 	case 2:
-		printf("\nCitizen : %d - > %d (aggro : %d)", Citizen, PC, Citizen_Aggro);
+		printf("\nCitizen : %d - > %d (aggro : %d)", PC - 1, PC, Citizen_Aggro);
 		break;
 	case 3:
 		printf("\nCitizen : %d (aggro : %d -> %d)", PC, Citizen_Aggro + 1, Citizen_Aggro);
@@ -159,16 +159,16 @@ void displayPosition_C(void) {
 
 //좀비 이동s
 void Z_movement(void) {
-	if (Turnphase % 2 == 1 && Madongseok_Hold == 1) {
+	if (Turnphase % 2 == 1) {
 		Position_Z = 1;
 	}
-	else if (Turnphase % 2 == 1 && Madongseok_Hold == 0) {
-		Position_Z = 2;
+	else if (Turnphase % 2 == 1 && Madongseok_Hold == 1) {
+		Position_Z = 1;
+		Madongseok_Hold = 0;
 	}
 	else if (Turnphase % 2 == 0 && Madongseok_Hold == 0) {
-		Random_NumZ = rand() % 100 + 1;
-		if (Random_NumZ <= percentile_probability) {
-			if ((PM - PZ) > 1) {
+		if (Citizen_Aggro < Madongseok_Aggro) {
+			if ((PM - PZ) >= 1) {
 				PZ++;
 				Position_Z = 2;
 			}
@@ -177,7 +177,7 @@ void Z_movement(void) {
 			}
 		}
 		else {
-			if ((PZ - PC) > 1) {
+			if ((PZ - PC) >= 1) {
 				PZ--;
 				Position_Z = 3;
 			}
@@ -198,7 +198,7 @@ void displayPosition_Z(void) {
 		printf("\nZombie : %d -> %d", PZ - 1, PZ);
 		break;
 	case 3:
-		printf("\nZombie : %d -> %d", PZ + 1, PZ);
+		printf("\nZombie : %d -> %d", PZ + 1, PZ	);
 		break;
 	case 4:
 		printf("\nZombie : stay %d", PZ);
@@ -268,7 +268,7 @@ void displayPosition_M(void) {
 	default:
 		break;
 	}
-}
+} 
 
 //시민 행동
 void C_action(void) {
@@ -420,7 +420,10 @@ int main(void) {
 	Madongseok_Hold = 0;    
 	Citizen_Aggro = 1;      
 	Madongseok_Aggro = 1;   
-	Turnphase = 1;          
+	Turnphase = 0;  
+	Citizen = PC;
+	Zombie = PZ;
+	Madongseok = PM;
 
 
 	intro();                
@@ -434,14 +437,11 @@ int main(void) {
 	Train();         
 
 	while (1) {
-		Citizen = PC;
-		Zombie = PZ;
-		Madongseok = PM;
-
 		C_movement();           
-		Z_movement();           
+		Z_movement();  
 
-		Train();           
+		Train();  
+		displayPosition_C();
 		displayPosition_Z();    
 		printf("\n");
 		M_movement();           
