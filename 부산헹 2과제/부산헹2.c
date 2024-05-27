@@ -57,7 +57,7 @@ void outro(void) {
 	if (PC == PZ - 1) {
 		printf("\nGAME OVER!\nTHE citizen has been caught by the zombie.\n");
 	}
-    if (PC == 1) {
+	if (PC == 1) {
 		printf("\nYOU WIN!\nTHE citizen has escaped to the next train.\n");
 	}
 }
@@ -201,7 +201,7 @@ void displayPosition_Z(void) {
 		printf("\nZombie : %d -> %d", PZ - 1, PZ);
 		break;
 	case 3:
-		printf("\nZombie : %d -> %d", PZ + 1, PZ	);
+		printf("\nZombie : %d -> %d", PZ + 1, PZ);
 		break;
 	case 4:
 		printf("\nZombie : stay %d", PZ);
@@ -271,7 +271,7 @@ void displayPosition_M(void) {
 	default:
 		break;
 	}
-} 
+}
 
 //시민 행동
 void C_action(void) {
@@ -299,7 +299,7 @@ void displayAction_C(void) {
 }
 
 //좀비 행동
-void Z_action(void){
+void Z_action(void) {
 	if (((PZ - PC) > 1) && ((PM - PZ) > 1)) {
 		Action_Z = ATK_CITIZEN;
 	}
@@ -343,17 +343,21 @@ void displayAction_Z(void) {
 //마동석 행동
 void M_action(void) {
 	if ((PM - PZ) != 1) {
+		printf("\nmadongseok action (%d : rest, %d : provoke) >> ", ACTION_REST, ACTION_PROVOKE);
+		scanf_s("%d", &Madongseok_Action);
 		while (Madongseok_Action != 0 && Madongseok_Action != 1) {
 			printf("\nmadongseok action (%d : rest, %d : provoke) >> ", ACTION_REST, ACTION_PROVOKE);
 			scanf_s("%d", &Madongseok_Action);
 		}
 	}
 	else {
+		printf("\nmadongseok action (%d :rest, %d : provoke, %d : pull) >> ", ACTION_REST, ACTION_PROVOKE, ACTION_PULL);
+		scanf_s("%d", &Madongseok_Action);
 		while (Madongseok_Action < 0 && Madongseok_Action > 2) {
 			printf("\nmadongseok action (%d :rest, %d : provoke, %d : pull) >> ", ACTION_REST, ACTION_PROVOKE, ACTION_PULL);
+			scanf_s("%d", &Madongseok_Action);
 		}
 	}
-
 	M_action1();
 }
 
@@ -400,7 +404,7 @@ void displayAction_M1(void) {
 	switch (Action_M) {
 	case 1:
 		printf("\nmadongseok rest.....");
-		printf("\nmadongseok : %d (aggro : %d -> %d, stamina : %d -> %d)\n", PM, Madongseok_Aggro + 1, Madongseok_Aggro,Madongseok_Stamina - 1, Madongseok_Stamina);
+		printf("\nmadongseok : %d (aggro : %d -> %d, stamina : %d -> %d)\n", PM, Madongseok_Aggro + 1, Madongseok_Aggro, Madongseok_Stamina - 1, Madongseok_Stamina);
 		break;
 	case 2:
 		printf("\nmadongseok rest.....");
@@ -457,54 +461,55 @@ void displayAction_M3(void) {
 //main 함수
 int main(void) {
 	srand((unsigned int)time(NULL));
-	
-	Position_C = 0;         
-	Position_Z = 0;         
-	Position_M = 0;         
-	GameOver = 0;           
-	Citizen = 0;            
-	Zombie = 0;             
-	Madongseok = 0;         
-	Madongseok_Hold = 0;    
-	Citizen_Aggro = 1;      
-	Madongseok_Aggro = 1;   
-	Turnphase = 0;  
+
+	Position_C = 0;
+	Position_Z = 0;
+	Position_M = 0;
+	GameOver = 0;
+	Citizen = 0;
+	Zombie = 0;
+	Madongseok = 0;
+	Madongseok_Hold = 0;
+	Citizen_Aggro = 1;
+	Madongseok_Aggro = 1;
+	Turnphase = 0;
 	Citizen = PC;
 	Zombie = PZ;
 	Madongseok = PM;
 
 
-	intro();                
-	train();           
-	Stamina();         
-	Percent();         
+	intro();
+	train();
+	Stamina();
+	Percent();
 
-	PM = train_length - 2;  
-	PZ = train_length - 3;  
-	PC = train_length - 6;  
-	Train();         
+	PM = train_length - 2;
+	PZ = train_length - 3;
+	PC = train_length - 6;
+	Train();
 
 	while (1) {
-		C_movement();           
-		Z_movement();  
+		C_movement();
+		Z_movement();
 
-		Train();  
+		Train();
 		displayPosition_C();
-		displayPosition_Z();    
+		displayPosition_Z();
 		printf("\n");
-		M_movement();           
-		Train();         
+		M_movement();
+		Train();
 
-		displayPosition_M();    
-		
-		C_action();         
-		Z_action();         
-		displayAction_C();  
+		displayPosition_M();
+
+		C_action();
+		Z_action();
+		displayAction_C();
 		if (GameOver == 1) break;
-		displayAction_Z();  
-		M_action();         
-		displayAction_M();    
-		
+		displayAction_Z();
+		if (GameOver == 1) break;
+		M_action();
+		displayAction_M();
+
 		Turnphase++;
 		if (GameOver == 1) break;
 	}
