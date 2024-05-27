@@ -363,7 +363,6 @@ void M_action(void) {
 
 //마동석 행동 1
 void M_action1(void) {
-	Madongseok_Action = -1;
 	if (Madongseok_Action == ACTION_REST) {
 		if (Madongseok_Aggro > AGGRO_MIN && Madongseok_Stamina < STM_MAX) {
 			Madongseok_Aggro--;
@@ -396,7 +395,6 @@ void M_action1(void) {
 //마동석 행동 swtich문
 void displayAction_M(void) {
 	displayAction_M1();
-	displayAction_M2();
 }
 
 //마동석 행동 switch문 1
@@ -411,7 +409,7 @@ void displayAction_M1(void) {
 		printf("\nmadongseok : %d (aggro : %d -> %d, stamina : %d)\n", PM, Madongseok_Aggro + 1, Madongseok_Aggro, Madongseok_Stamina);
 		break;
 	default:
-		break;
+		displayAction_M2;
 	}
 }
 
@@ -428,8 +426,9 @@ void displayAction_M2(void) {
 		break;
 	case 5:
 		printf("\nmadongseok : %d (aggro : %d, stamina : %d)\n", PM, Madongseok_Aggro, Madongseok_Stamina);
-	default:
 		break;
+	default:
+		displayAction_M3;
 	}
 }
 
@@ -453,7 +452,7 @@ void displayAction_M3(void) {
 			printf("\nmadongseok: %d (aggro : %d, stamina: %d)\n", PM, Madongseok_Aggro, Madongseok_Stamina);
 		}
 		break;
-	defualt:
+	default:
 		break;
 	}
 }
@@ -472,6 +471,7 @@ int main(void) {
 	Madongseok_Hold = 0;
 	Citizen_Aggro = 1;
 	Madongseok_Aggro = 1;
+	Madongseok_Action = -1;
 	Turnphase = 0;
 	Citizen = PC;
 	Zombie = PZ;
