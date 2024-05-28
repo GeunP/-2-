@@ -283,34 +283,34 @@ void displayAction_C(void) {
 
 //좀비 행동
 void Z_action(void) {
-	if (((PZ - PC) > 1) && ((PM - PZ) > 1)) {
-		Action_Z = ATK_NONE;
-	}
-	else {
-		if ((PZ - PC) == 1 && (PM - PZ) != 1) {
-			Action_Z = ATK_CITIZEN;
-		}
-		else if ((PZ - PC) != 1 && (PM - PZ) == 1) {
-			Action_Z = ATK_DONGSEOK;
-		}
-		else if ((PZ - PC) == 1 && (PM - PZ) == 1) {
-			if (Citizen_Aggro > Madongseok_Aggro) {
+	if((PZ - PC) == 1) {
+		if ((PM - PZ) == 1) {
+			if (Citizen_Aggro > Madongseok_Aggro) { // 시민 어그로가 높으면 시민 공격
 				Action_Z = ATK_CITIZEN;
-
 			}
-			else if (Citizen_Aggro < Madongseok_Aggro) {
+			else if (Citizen_Aggro < Madongseok_Aggro) { // 마동석 어그로가 높으면 마동석 공격
 				Action_Z = ATK_DONGSEOK;
 			}
-			else {
+			else { // 어그로가 같으면 아무것도 안 함
 				Action_Z = ATK_NONE;
 			}
-		printf("\nZombie attacked madongseok (aggro : %d vs %d, madongseok stamina : %d -> %d)", Citizen_Aggro, Madongseok_Aggro, Madongseok_Stamina + 1, Madongseok_Stamina);
+		}
+		else if ((PM - PZ) != 1) { // 시민과 붙어있으면 시민 공격
+			Action_Z = ATK_CITIZEN;
 		}
 	}
+	else if ((PZ - PC) != 1) {
+		if ((PM - PZ) == 1) { // 마동석과 붙어있으면 마동석 공격
+			Action_Z = ATK_DONGSEOK;
+		}
+		else {
+			Action_Z = ATK_NONE;
+		}
+		}
 }
 
 //좀비 행동 switch문
-void displayAction_Z(void) {
+void displayAction_Z(void)	 {
 	switch (Action_Z) {
 	case ATK_NONE:
 		printf("\nzombie attack nobody.\n");
@@ -320,12 +320,12 @@ void displayAction_Z(void) {
 		GameOver = 1;
 		break;
 	case ATK_DONGSEOK:
-		Madongseok_Stamina--;
+		if (Madongseok_Stamina > STM_MIN) Madongseok_Stamina--;
 		if (Madongseok_Stamina == STM_MIN) {
 			printf("GAME OVER! madongseok dead..... (stamina : %d)\n", STM_MIN);
 			GameOver = 1;
 		}
-		printf("\nZombie attacked madongseok (aggro : %d, stamina : %d -> %d)", Madongseok_Aggro, Madongseok_Stamina + 1, Madongseok_Stamina);
+		printf("\nZombie attacked madongsoke (aggro : %d vs %d, madongsoek stamina : %d -> %d", Citizen_Aggro, Madongseok_Aggro, Madongseok_Stamina + 1, Madongseok_Stamina);
 	default:
 		break;
 	}
