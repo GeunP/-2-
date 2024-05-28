@@ -296,6 +296,7 @@ void Z_action(void) {
 		else if ((PZ - PC) == 1 && (PM - PZ) == 1) {
 			if (Citizen_Aggro > Madongseok_Aggro) {
 				Action_Z = ATK_CITIZEN;
+
 			}
 			else if (Citizen_Aggro < Madongseok_Aggro) {
 				Action_Z = ATK_DONGSEOK;
@@ -303,7 +304,7 @@ void Z_action(void) {
 			else {
 				Action_Z = ATK_NONE;
 			}
-			printf("\nzombie attacked madongseok (aggro : %d vs %d, madongseok stamina : %d -> %d)", Citizen_Aggro, Madongseok_Aggro, Madongseok_Stamina + 1, Madongseok_Stamina);
+		printf("\nZombie attacked madongseok (aggro : %d vs %d, madongseok stamina : %d -> %d)", Citizen_Aggro, Madongseok_Aggro, Madongseok_Stamina + 1, Madongseok_Stamina);
 		}
 	}
 }
@@ -324,7 +325,7 @@ void displayAction_Z(void) {
 			printf("GAME OVER! madongseok dead..... (stamina : %d)\n", STM_MIN);
 			GameOver = 1;
 		}
-		printf("\nZombie attacked madongseok (aggro : %d, stamina : %d -> %d", Madongseok_Aggro, Madongseok_Stamina + 1, Madongseok_Stamina);
+		printf("\nZombie attacked madongseok (aggro : %d, stamina : %d -> %d)", Madongseok_Aggro, Madongseok_Stamina + 1, Madongseok_Stamina);
 	default:
 		break;
 	}
@@ -357,7 +358,7 @@ void M_action(void) {
 				Action_M = 2;
 			}
 		}
-		else if (Madongseok_Stamina == AGGRO_MIN && Madongseok_Stamina < STM_MAX) {
+	    else if (Madongseok_Aggro == AGGRO_MIN && Madongseok_Stamina < STM_MAX) {
 			Madongseok_Stamina++;	// 마동석 체력 1 증가
 			Action_M = 3;
 		}
@@ -373,7 +374,7 @@ void M_action(void) {
 			Madongseok_Aggro = Madongseok_Aggro + 1;
 		}
 		else {
-			Madongseok_Aggro = Madongseok_Aggro + 2;  // 마동석 어그로 2 증가, 마동석 어그로가 어그로 최고값 보다 2 이상 작을 때
+			Madongseok_Aggro = AGGRO_MAX;  // 마동석 어그로 2 증가, 마동석 어그로가 어그로 최고값 보다 2 이상 작을 때
 		}
 		Madongseok_Stamina--;						// 마동석 체력 1 감소
 		Action_M = 6;
@@ -393,7 +394,7 @@ void displayAction_M(void) {
 		break;
 	case 3:
 		printf("\nmadongseok rest...\n");
-		printf("\nmadongseok: %d (aggro: %d -> %d, stamina: %d -> %d)\n", PM, Madongseok_Aggro - 1, Madongseok_Aggro, Madongseok_Stamina - 1, Madongseok_Stamina);
+		printf("\nmadongseok: %d (aggro: %d, stamina: %d -> %d)\n", PM, Madongseok_Aggro, Madongseok_Stamina - 1, Madongseok_Stamina);
 		break;
 	case 4:
 		printf("\nmadongseok rest...\n");
