@@ -290,7 +290,7 @@ void Z_action(void) {
 		if ((PZ - PC) == 1 && (PM - PZ) != 1) {
 			Action_Z = ATK_CITIZEN;
 		}
-		else if ((PZ - PC) != 1 && (PM - PC) == 1) {
+		else if ((PZ - PC) != 1 && (PM - PZ) == 1) {
 			Action_Z = ATK_DONGSEOK;
 		}
 		else if ((PZ - PC) == 1 && (PM - PZ) == 1) {
@@ -303,6 +303,7 @@ void Z_action(void) {
 			else {
 				Action_Z = ATK_NONE;
 			}
+			printf("\nzombie attacked madongseok (aggro : %d vs %d, madongseok stamina : %d -> %d)", Citizen_Aggro, Madongseok_Aggro, Madongseok_Stamina + 1, Madongseok_Stamina);
 		}
 	}
 }
@@ -323,7 +324,7 @@ void displayAction_Z(void) {
 			printf("GAME OVER! madongseok dead..... (stamina : %d)\n", STM_MIN);
 			GameOver = 1;
 		}
-		printf("\nZombie attacked madongsoke (aggro : %d vs %d, madongsoek stamina : %d -> %d", Citizen_Aggro, Madongseok_Aggro, Madongseok_Stamina + 1, Madongseok_Stamina);
+		printf("\nZombie attacked madongseok (aggro : %d, stamina : %d -> %d", Madongseok_Aggro, Madongseok_Stamina + 1, Madongseok_Stamina);
 	default:
 		break;
 	}
@@ -343,7 +344,7 @@ void M_action(void) {
 			printf("\nmadongseok action (%d.rest, %d.provoke, %d.pull) >> ", ACTION_REST, ACTION_PROVOKE, ACTION_PULL);
 			scanf_s("%d", &Madongseok_Action);
 		}
-	}
+	}	
 	if (Madongseok_Action == ACTION_REST) {
 		if (Madongseok_Aggro > AGGRO_MIN) {
 			if (Madongseok_Stamina < STM_MAX) { // 마동석 체력이 체력 최고값 보다 작을 때
@@ -392,7 +393,7 @@ void displayAction_M(void) {
 		break;
 	case 3:
 		printf("\nmadongseok rest...\n");
-		printf("\nmadongseok: %d (aggro: %d, stamina: %d -> %d)\n", PM, Madongseok_Aggro, Madongseok_Stamina - 1, Madongseok_Stamina);
+		printf("\nmadongseok: %d (aggro: %d -> %d, stamina: %d -> %d)\n", PM, Madongseok_Aggro - 1, Madongseok_Aggro, Madongseok_Stamina - 1, Madongseok_Stamina);
 		break;
 	case 4:
 		printf("\nmadongseok rest...\n");
