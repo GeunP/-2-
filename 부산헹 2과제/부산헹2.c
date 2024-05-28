@@ -376,8 +376,8 @@ void M_action(void) {
 		else {
 			Madongseok_Aggro = AGGRO_MAX;  // 마동석 어그로 2 증가, 마동석 어그로가 어그로 최고값 보다 2 이상 작을 때
 		}
-		Madongseok_Stamina--;						// 마동석 체력 1 감소
-		Action_M = 6;
+	Madongseok_Stamina--;						// 마동석 체력 1 감소
+	Action_M = 6;
 	}
 }
 
