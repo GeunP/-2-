@@ -1,6 +1,3 @@
-// Coded by : ¿Ã±Ÿ«•
-// Date     : 24/05/28
-
 #include<stdio.h>
 #include<time.h>
 #include<windows.h>
