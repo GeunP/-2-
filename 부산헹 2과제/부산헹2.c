@@ -170,36 +170,34 @@ void Z_movement(void) {
 	}
 	else if (Turnphase % 2 == 0 && Madongseok_Hold == 0) { // 2턴마다 이동 가능, 마동석 '붙들기' 실패
 		if (Citizen_Aggro < Madongseok_Aggro) {
-			if ((PM - PZ) > 1) {
-				PZ++; // 마동석 어그로가 높으면, 마동석 쪽으로 이동
-				Position_Z = 2;
-			}
-			else {
-				Position_Z = 4; // 이동하지 않음
-			}
+			Z_movement1();
 		}
 		else {
-			if ((PZ - PC) > 1) {
-				PZ--; // 시민 어그로가 높거나 같으면, 시민 쪽으로 이동
-				Position_Z = 3;
-			}
-			else {
-				Position_Z = 4; // 이동하지 않음
-			}
+			Z_movement2();
 		}
 	}
 }
 
 //좀비 이동+
-void Z_movement(void) {
-	if (Citizen_Aggro < Madongseok_Aggro) {
-		if ((PM - PZ) > 1) {
-			PZ++; // 마동석 어그로가 높으면, 마동석 쪽으로 이동
-			Position_Z = 2;
-		}
-		else {
-			Position_Z = 4; // 이동하지 않음
-		}
+void Z_movement1(void) {
+	if ((PM - PZ) > 1) {
+		PZ++; // 마동석 어그로가 높으면, 마동석 쪽으로 이동
+		Position_Z = 2;
+	}
+	else {
+		Position_Z = 4; // 이동하지 않음
+	}
+}
+
+//좀비 이동++
+void Z_movement2(void) {
+	if ((PZ - PC) > 1) {
+		PZ--; // 시민 어그로가 높거나 같으면, 시민 쪽으로 이동
+		Position_Z = 3;
+	}
+	else {
+		Position_Z = 4; // 이동하지 않음
+	}
 }
 
 //Position_Z switch문
