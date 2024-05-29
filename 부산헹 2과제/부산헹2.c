@@ -25,7 +25,7 @@
 #define ACTION_PROVOKE 1
 #define ACTION_PULL 2
 
-// 변수 초기화를 위함 임의값
+// 변수 초기화를 위함 임의값 (아버지의 추천)
 #define initialValue 10000
 
 //변수 선언
