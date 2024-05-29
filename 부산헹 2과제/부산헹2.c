@@ -359,12 +359,14 @@ void displayAction_Z(void)	 {
 		GameOver = 1;
 		break;
 	case ATK_DONGSEOK:
-		if (Madongseok_Stamina > STM_MIN) Madongseok_Stamina--;
+		if (Madongseok_Stamina > STM_MIN) {
+			Madongseok_Stamina--;
+		}
 		if (Madongseok_Stamina == STM_MIN) {
 			printf("GAME OVER! madongseok dead..... (stamina : %d)\n", STM_MIN);
 			GameOver = 1;
 		}
-		printf("\nZombie attacked madongsoke (aggro : %d vs %d, madongsoek stamina : %d -> %d", Citizen_Aggro, Madongseok_Aggro, Madongseok_Stamina + 1, Madongseok_Stamina);
+		printf("\nZombie attacked madongsoek (aggro : %d vs %d, madongsoek stamina : %d -> %d", Citizen_Aggro, Madongseok_Aggro, Madongseok_Stamina + 1, Madongseok_Stamina);
 	default:
 		break;
 	}
