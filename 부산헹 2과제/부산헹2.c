@@ -40,6 +40,11 @@ int Position_C, Position_Z, Position_M;     // Citizen, Zombie and Madongseok's 
 int Action_C, Action_Z, Action_M;            // Citizen, Zombie and Madongseok's Action Value
 int GameOver;                               // Game Over Fag, '0':ing, '1':end
 
+//20줄 안쪽으로 하기 위한 함수 선언
+void C_movement1(void);
+void Z_movement1(void);
+void Z_movement2(void);
+
 
 //인트로
 void intro(void) {
@@ -74,7 +79,6 @@ void Percent(void) {
 		printf("percentile probability 'p'(%d ~ %d) >> ", PROB_MIN, PROB_MAX);
 		scanf_s("%d", &percentile_probability);
 	}
-
 }
 
 //마동석 체력
@@ -84,7 +88,7 @@ void Stamina(void) {
 		printf("madongseok stamina (%d ~ %d) >> ", STM_MIN, STM_MAX);
 		scanf_s("%d", &Madongseok_Stamina);
 	}
-}
+} 
 
 //열차 상태
 void Train(void) {
@@ -119,17 +123,22 @@ void C_movement(void) {
 			}
 		}
 		else { // 시민 제자리
-			if (Citizen_Aggro > AGGRO_MIN) {
-				Citizen_Aggro--;
-				Position_C = 3;
-			}
-			else {
-				Position_C = 4;
-			}
+			C_movement();
 		}
 	}
 	else {
 		GameOver = 1;
+	}
+}
+
+//시민 움직임+
+void C_movement1(void) {
+	if (Citizen_Aggro > AGGRO_MIN) {
+		Citizen_Aggro--;
+		Position_C = 3;
+	}
+	else {
+		Position_C = 4;
 	}
 }
 
@@ -179,6 +188,18 @@ void Z_movement(void) {
 			}
 		}
 	}
+}
+
+//좀비 이동+
+void Z_movement(void) {
+	if (Citizen_Aggro < Madongseok_Aggro) {
+		if ((PM - PZ) > 1) {
+			PZ++; // 마동석 어그로가 높으면, 마동석 쪽으로 이동
+			Position_Z = 2;
+		}
+		else {
+			Position_Z = 4; // 이동하지 않음
+		}
 }
 
 //Position_Z switch문
