@@ -44,8 +44,10 @@ int GameOver;                               // Game Over Fag, '0':ing, '1':end
 void C_movement1(void);
 void Z_movement1(void);
 void Z_movement2(void);
-void Z_action1();
-void Z_action2();
+void M_movestay(void);
+void M_moveleft(void);
+void Z_action1(void);
+void Z_action2(void);
 
 
 //¿Œ∆Æ∑Œ
