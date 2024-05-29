@@ -1,3 +1,6 @@
+// Coded by : 이근표
+// Date     : 24/05/29
+
 #include<stdio.h>
 #include<time.h>
 #include<windows.h>
@@ -25,7 +28,7 @@
 #define ACTION_PROVOKE 1
 #define ACTION_PULL 2
 
-// 변수 초기화를 위함 임의값 (아버지의 추천)
+// 변수 초기화를 위함 임의값
 #define initialValue 10000
 
 //변수 선언
@@ -285,11 +288,8 @@ void Z_action(void) {
 			if (Citizen_Aggro > Madongseok_Aggro) { // 시민 어그로가 높으면 시민 공격
 				Action_Z = ATK_CITIZEN;
 			}
-			else if (Citizen_Aggro < Madongseok_Aggro) { // 마동석 어그로가 높으면 마동석 공격
+			else { // 마동석 어그로가 높거나 같을 때
 				Action_Z = ATK_DONGSEOK;
-			}
-			else { // 어그로가 같으면 아무것도 안 함
-				Action_Z = ATK_NONE;
 			}
 		}
 		else if ((PM - PZ) != 1) { // 시민과 붙어있으면 시민 공격
@@ -319,10 +319,15 @@ void displayAction_Z(void) {
 	case ATK_DONGSEOK:
 		if (Madongseok_Stamina > STM_MIN) Madongseok_Stamina--;
 		if (Madongseok_Stamina == STM_MIN) {
-			printf("GAME OVER! madongseok dead..... (stamina : %d)\n", STM_MIN);
+			printf("GAME OVER! madongseok dead.(stamina : %d)\n", STM_MIN);
 			GameOver = 1;
 		}
-		printf("\nZombie attacked madongsoke (aggro : %d vs %d, madongsoek stamina : %d -> %d", Citizen_Aggro, Madongseok_Aggro, Madongseok_Stamina + 1, Madongseok_Stamina);
+		if (Citizen_Aggro == Madongseok_Aggro) {
+			printf("\nZombie attacked madongsoke (aggro: %d vs %d, madongsoek stamina: %d -> %d)\n", Citizen_Aggro, Madongseok_Aggro, Madongseok_Stamina + 1, Madongseok_Stamina);
+		}
+		else {
+			printf("\nZombie attacked madongsoke (madongsoek stamina: %d -> %d)\n", Madongseok_Stamina + 1, Madongseok_Stamina);
+		}
 	default:
 		break;
 	}
