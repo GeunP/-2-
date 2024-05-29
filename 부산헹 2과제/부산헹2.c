@@ -44,6 +44,8 @@ int GameOver;                               // Game Over Fag, '0':ing, '1':end
 void C_movement1(void);
 void Z_movement1(void);
 void Z_movement2(void);
+void Z_action1();
+void Z_action2();
 
 
 //인트로
@@ -310,27 +312,37 @@ void displayAction_C(void) {
 void Z_action(void) {
 	if((PZ - PC) == 1) {
 		if ((PM - PZ) == 1) {
-			if (Citizen_Aggro > Madongseok_Aggro) { // 시민 어그로가 높으면 시민 공격
-				Action_Z = ATK_CITIZEN;
-			}
-			else if (Citizen_Aggro < Madongseok_Aggro) { // 마동석 어그로가 높으면 마동석 공격
-				Action_Z = ATK_DONGSEOK;
-			}
-			else { // 어그로가 같으면 아무것도 안 함
-				Action_Z = ATK_NONE;
-			}
+			Z_action1();
 		}
 		else if ((PM - PZ) != 1) { // 시민과 붙어있으면 시민 공격
 			Action_Z = ATK_CITIZEN;
 		}
 	}
 	else if ((PZ - PC) != 1) {
-		if ((PM - PZ) == 1) { // 마동석과 붙어있으면 마동석 공격
-			Action_Z = ATK_DONGSEOK;
-		}
-		else {
-			Action_Z = ATK_NONE;
-		}
+		Z_action2();
+	}
+}
+
+//좀비 행동+
+void Z_action1(void) {
+	if (Citizen_Aggro > Madongseok_Aggro) { // 시민 어그로가 높으면 시민 공격
+		Action_Z = ATK_CITIZEN;
+	}
+	else if (Citizen_Aggro < Madongseok_Aggro) { // 마동석 어그로가 높으면 마동석 공격
+		Action_Z = ATK_DONGSEOK;
+	}
+	else { // 어그로가 같으면 아무것도 안 함
+		Action_Z = ATK_NONE;
+	}
+}
+
+//좀비 행동++
+void Z_action2(void) {
+	if ((PM - PZ) == 1) { // 마동석과 붙어있으면 마동석 공격
+		Action_Z = ATK_DONGSEOK;
+	}
+	else {
+		Action_Z = ATK_NONE;
 	}
 }
 
