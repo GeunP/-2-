@@ -222,7 +222,6 @@ void displayPosition_Z(void) {
 
 //마동석 이동
 void M_movement(void) {
-	move = -1;
 	if ((PM - PZ) == 1) {
 		while (move != 0) {
 			printf("\nmadongseok move (%d : stay)", MOVE_STAY);
@@ -236,20 +235,30 @@ void M_movement(void) {
 		}
 	}
 	if (move == MOVE_STAY) { // 제자리 대기
-		if (Madongseok_Aggro > AGGRO_MIN) {
-			Madongseok_Aggro--; // 마동석 어그로 감소
-			Position_M = 1;
-		}
-		else Position_M = 2;
+		M_movestay();
 	}
 	if (move == MOVE_LEFT) { // 왼쪽으로 이동
 		PM--;
-		if (Madongseok_Aggro < AGGRO_MAX) {
-			Madongseok_Aggro++; // 마동석 어그로 증가
-			Position_M = 3;
-		}
-		else Position_M = 4;
+		M_moveleft();
 	}
+}
+
+//마동석 제자리 대기
+void M_movestay(void) {
+	if (Madongseok_Aggro > AGGRO_MIN) {
+		Madongseok_Aggro--; // 마동석 어그로 감소
+		Position_M = 1;
+	}
+	else Position_M = 2;
+}
+
+//마동석 왼쪽으로 이동
+void M_moveleft(void) {
+	if (Madongseok_Aggro < AGGRO_MAX) {
+		Madongseok_Aggro++; // 마동석 어그로 증가
+		Position_M = 3;
+	}
+	else Position_M = 4;
 }
 
 //마동석 이동 switch문
@@ -322,7 +331,7 @@ void Z_action(void) {
 		else {
 			Action_Z = ATK_NONE;
 		}
-		}
+	}
 }
 
 //좀비 행동 switch문
@@ -489,6 +498,7 @@ int main(void) {
 		displayPosition_Z();
 		printf("\n");
 
+		move = -1;
 		M_movement();
 		Train();
 
